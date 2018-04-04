@@ -1,8 +1,31 @@
-<jsp:include page="/templates/head.jsp"></jsp:include>
-<jsp:include page="/templates/navbar.jsp"></jsp:include>
-<jsp:include page="/templates/alert.jsp"></jsp:include>
+<%@include file="/templates/head.jsp" %>
+<%@include file="/templates/navbar.jsp"%>
+<%@include file="/templates/alert.jsp"%>
 
-<h1>Backofiicez</h1>
+<h1>Backoffice</h1>
+<%
+//ArrayList<Material> lista = (ArrayList<Material>)request.getAttribute("materiales");
+//mejor usamos EL => Expresion Lenguage => ${}
+//Podemos usar cualquier expresion ,si no hay expresion pinta la variable
+%>
+<!-- ${materiales} saca listado de materiales -->
+<ol>
+	 <c:forEach items="${materiales}" var ="material">	
+	 <c:set var="clase" value=""/> 	
+      	<c:choose>          	     
+         <c:when test = "${material.precio >=6.0 and material.precio<25.0 }">
+          	<c:set var="clase" value="blue"/>             
+         </c:when>         
+         <c:when test = "${material.precio >=25.0}">
+            <c:set var="clase" value="text-danger"/>    
+         </c:when>         
+         <c:otherwise>              	  
+         </c:otherwise>
+      </c:choose>
+      	<li>  ${material.nombre} - <span class="${clase}"> ${material.precio} &euro;</span></li>     
+      		
+     </c:forEach>
+</ol>
 
 
 <jsp:include page="/templates/footer.jsp"></jsp:include>

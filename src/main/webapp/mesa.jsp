@@ -2,9 +2,10 @@
 <%@page import="com.ipartek.formacion.nidea.pojo.Material"%>
 <%@page import="com.ipartek.formacion.nidea.pojo.Mesa"%>
 
-<jsp:include page="templates/head.jsp"></jsp:include>
-<jsp:include page="templates/navbar.jsp"></jsp:include>
-<jsp:include page="/templates/alert.jsp"></jsp:include>
+<%@include file="/templates/head.jsp" %>
+<%@include file="/templates/navbar.jsp"%>
+<%@include file="/templates/alert.jsp"%>
+
 
 <%
 	// recoger atributo del controlador, si es que existe

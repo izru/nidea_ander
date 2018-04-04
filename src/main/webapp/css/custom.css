@@ -11,6 +11,12 @@ svg{
 	display:block;
 	margin: auto;
 }
+.blue{
+	color:blue;
+}
+.red{
+	color:red;
+}
 
 /* login
 *****************************************/
