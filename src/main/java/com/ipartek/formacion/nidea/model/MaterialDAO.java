@@ -141,4 +141,10 @@ public class MaterialDAO {
 		return lista;
 	}
 
+	public void guardar(int id, String nombre, float precio) {
+		// TODO Auto-generated method stub
+		System.out.println("lo guardo" + id + nombre + precio);
+
+	}
+
 }

@@ -26,7 +26,8 @@ public class LoginController extends HttpServlet {
 	private static final String USER = "admin";
 	private static final String PASS = "admin";
 
-	private static final int SESSION_EXPIRATION = 60 * 1;// 1 min
+	// private static final int SESSION_EXPIRATION = 60 * 1;// 1 min
+	private static final int SESSION_EXPIRATION = -1; // No expira
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse

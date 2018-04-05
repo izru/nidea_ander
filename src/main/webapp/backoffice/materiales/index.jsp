@@ -1,9 +1,12 @@
 <%@include file="/templates/head.jsp" %>
 <%@include file="/templates/navbar.jsp"%>
 <%@include file="/templates/alert.jsp"%>
+<%@page import="com.ipartek.formacion.nidea.controller.backoffice.MaterialesController"%>
 
 Buscador:
-<form action="materiales-backoffice" method="get">
+<!-- <form action="materiales-backoffice" method="get"> -->
+<form action="materiales" method="get">
+	<input type="hidden" name="op" value="<%=MaterialesController.OP_BUSQUEDA%>"></input>	
 	<input type="text" name="search" required placeholder="Nombre material"></input>
 	<input type="submit" value="buscar"></input>
 </form> 
@@ -70,7 +73,11 @@ Buscador:
          								</c:otherwise>
       								</c:choose>
       								<tr role="row">      	
-      									<td class="sorting_1">  ${material.nombre} </td>
+      									<td class="sorting_1">  
+      										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>&nombre=${material.nombre}&precio=${material.precio}">
+      									    	${material.nombre} 
+      									    	</a>
+      									</td>
       									<td> <span class="${clase}"> ${material.precio} &euro;</span></td>  
       									<td>
       										<a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> 
@@ -123,5 +130,16 @@ Buscador:
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM
     </div>
 </div>
-        
 <jsp:include page="/templates/footer.jsp"></jsp:include>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>       
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script>
+
+
+        

@@ -3,6 +3,8 @@ package com.ipartek.formacion.nidea.controller.backoffice;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,9 +18,65 @@ import com.ipartek.formacion.nidea.pojo.Material;
 /**
  * Servlet implementation class MaterialesController
  */
-@WebServlet(name = "MaterialesBackofficeController", urlPatterns = { "/materiales-backoffice" })
+// @WebServlet(name = "MaterialesBackofficeController", urlPatterns = {
+// "/materiales-backoffice" })
+@WebServlet("/backoffice/materiales")
 public class MaterialesController extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
+	// private static final String VIEW_INDEX = "backoffice/materiales/index.jsp";
+	// private static final String VIEW_FORM = "/backoffice/materiales/detalle.jsp";
+
+	private static final String VIEW_INDEX = "materiales/index.jsp";
+	private static final String VIEW_FORM = "materiales/detalle.jsp";
+
+	public static final int OP_NINGUNA = 0;
+	public static final int OP_MOSTRAR_FORMULARIO = 1;
+	public static final int OP_BUSQUEDA = 2;
+	public static final int OP_ELIMINAR = 3;
+	public static final int OP_GUARDAR = 4;
+
+	private RequestDispatcher dispatcher;
+	private Alert alert;
+
+	private MaterialDAO dao;
+
+	// PARAMETROS
+	// parametros del material
+	private int id;
+	private String nombre;
+	private float precio;
+
+	// parametros comunes
+	private String search;// para el buscador por nombre material
+	private int op; // operacion a realizar
+
+	/**
+	 * se ejecuta solo 1º vez
+	 */
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		dao = MaterialDAO.getInstance();
+	}
+
+	/**
+	 * se ejecuta cuando paramos el servidor de aplicaciones (en este caso es
+	 * toncat)
+	 */
+	@Override
+	public void destroy() {
+		super.destroy();
+		dao = null;
+	}
+
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("antes de ejecutar doGET o doPost");
+		super.service(request, response);
+		System.out.println("despues de ejecutar doGET o doPost");
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -26,32 +84,7 @@ public class MaterialesController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		ArrayList<Material> materiales = new ArrayList<Material>();
-		Alert alert = null;
-		try {
-
-			String search = request.getParameter("search");
-			System.out.println("Filtro busqueda =" + search);
-
-			// enviar como atributo la lista de materiales
-			MaterialDAO dao = MaterialDAO.getInstance();
-			if (search != null) {
-				materiales = dao.getPorNombre(search);
-			} else {
-				materiales = dao.getAll();
-			}
-
-			// request interna a la jsp que queremos ir
-
-		} catch (Exception e) {
-			alert = new Alert();
-			e.printStackTrace();
-		} finally {
-			request.setAttribute("alert", alert);
-			request.setAttribute("materiales", materiales);
-			request.getRequestDispatcher("backoffice/materiales/index.jsp").forward(request, response);
-		}
-
+		doProcess(request, response);
 	}
 
 	/**
@@ -60,8 +93,110 @@ public class MaterialesController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		doProcess(request, response);
+	}
 
-		doGet(request, response);
+	/**
+	 * Unimos las peticiones doGet y doPost, hacemos lo mismo en ambas
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void doProcess(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		try {
+			// recoger los parametros
+			recogerParametros(request);
+			switch (op) {
+			case OP_MOSTRAR_FORMULARIO:
+				mostrarFormulario(request);
+				break;
+			case OP_BUSQUEDA:
+				buscar(request);
+				break;
+			case OP_ELIMINAR:
+				eliminar(request);
+				break;
+			case OP_GUARDAR:
+				guardar(request);
+				break;
+			default:
+				listar(request);
+				break;
+			}
+
+		} catch (Exception e) {
+			alert = new Alert();
+			e.printStackTrace();
+			dispatcher = request.getRequestDispatcher("VIEW_INDEX");
+		} finally {
+			request.setAttribute("alert", alert);
+			// request interna a la jsp que queremos ir
+			dispatcher.forward(request, response);
+			op = OP_NINGUNA;
+		}
+
+	}
+
+	private void listar(HttpServletRequest request) {
+		ArrayList<Material> materiales = new ArrayList<Material>();
+		materiales = dao.getAll();
+		request.setAttribute("materiales", materiales);
+		dispatcher = request.getRequestDispatcher(VIEW_INDEX);
+	}
+
+	private void guardar(HttpServletRequest request) {
+		mostrarFormulario(request);
+		dao.guardar(id, nombre, precio);
+
+	}
+
+	private void eliminar(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void buscar(HttpServletRequest request) {
+		alert = new Alert("Busqueda para: " + search, Alert.TIPO_PRIMARY);
+		ArrayList<Material> materiales = new ArrayList<Material>();
+		materiales = dao.getAll();
+		request.setAttribute("materiales", materiales);
+		dispatcher = request.getRequestDispatcher(VIEW_INDEX);
+
+	}
+
+	private void mostrarFormulario(HttpServletRequest request) {
+		Material material = new Material();
+		material.setNombre(nombre);
+		material.setPrecio(precio);
+		material.setId(id);
+		if (id > -1) {
+			// TODO recuperar de la BBDD que es un material que existe
+			alert = new Alert("Mostramos Detalle id:" + id, Alert.TIPO_WARNING);
+
+		} else {
+			alert = new Alert("Nuevo Producto", Alert.TIPO_WARNING);
+		}
+		request.setAttribute("material", material);
+		dispatcher = request.getRequestDispatcher(VIEW_FORM);
+	}
+
+	private void recogerParametros(HttpServletRequest request) {
+		if (request.getParameter("op") != null) {
+			op = Integer.parseInt(request.getParameter("op"));
+		}
+		search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
+		if (request.getParameter("id") != null) {
+			id = Integer.parseInt(request.getParameter("id"));
+		}
+		nombre = (request.getParameter("nombre") != null) ? request.getParameter("nombre") : "";
+		if (request.getParameter("precio") != null) {
+			precio = Float.parseFloat(request.getParameter("precio"));
+		}
+
 	}
 
 }

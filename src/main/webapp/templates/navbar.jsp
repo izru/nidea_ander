@@ -19,7 +19,8 @@
       <c:if test="${!empty usuario}">
       	<nav class="my-2 my-md-0 mr-md-10">
       		<a href="backoffice/index.jsp">Backoffice</a>
-      		<a href="materiales-backoffice">Materiales</a> 
+      		<!--  <a href="materiales-backoffice">Materiales</a> -->
+      		<a href="backoffice/materiales">Materiales</a> 
       		<a href="#" class="badge badge-secondary">${usuario}</a>
       	   	<a class="btn btn-outline-danger" href="logout">Logout</a>
       	</nav>   	

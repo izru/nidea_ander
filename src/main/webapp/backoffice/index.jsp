@@ -28,7 +28,8 @@
               </div>
               <div class="mr-5">Materiales</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="materiales-backoffice">
+           <!--    <a class="card-footer text-white clearfix small z-1" href="materiales-backoffice">-->
+            <a class="card-footer text-white clearfix small z-1" href="backoffice/materiales">
               <span class="float-left">Detalle</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
