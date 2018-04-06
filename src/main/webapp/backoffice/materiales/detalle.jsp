@@ -3,23 +3,60 @@
 <%@include file="/templates/navbar.jsp" %>
 <%@include file="/templates/alert.jsp" %>
 
+
 <h1>Detalle</h1>
 
 ${material}
 
-<form>
-  <div class="form-group"> 
-  	<label for="id">ID</label>   
-    <input type="text" class="form-control" id="id" name="id" value="${material.id}" placeholder="ID">   
-  </div>
-  <div class="form-group">
-  	<label for="nombre">Nombre</label>    
-    <input type="text" class="form-control" id="nombre" name="nombre" value="${material.nombre}" placeholder="Nombre material">   
-  </div>
-  <div class="form-group">
-    <label for="precio">Precio</label>
-    <input type="number" class="form-control" id="precio" value="${material.precio}" name="precio" placeholder="precio">
-  </div>
+<div class="container">
+	<div class="form-group row">
+		<a class="btn btn-outline-dark btn-lg" href="backoffice/materiales">Volver</a>
+	</div>
+	<form action="backoffice/materiales" method="post">
+ 
+  	<div class="form-group row">
+	    <label for="id" class="col-sm-2 col-form-label">ID</label>
+	    <div class="col-sm-2">
+	      <input type="text" class="form-control" name="id" readonly value="${material.id}" placeholder="ID">
+	    </div>
+	 </div>
+	 <div class="form-group row">
+	    <label for="nombre" class="col-sm-2 col-form-label">Material</label>
+	    <div class="col-sm-5">
+	      <input type="text" value="${material.nombre}" class="form-control" name="nombre" placeholder="Introduce el nombre del material" >
+	    </div>
+	  </div>
+	  <div class="input-group  row">
+	    <label for="precio" class="col-sm-2 col-form-label">Precio</label>
+	    <div class="input-group-append">
+	      <input type="text" class="form-control" value="${material.precio}" name="precio" placeholder="Introduce el precio">
+	      <span class="input-group-text">&euro;</span>
+	    </div>
+	   </div>
+	<c:if test="${material.id == -1}">
+		   <div class="form-group row">
+			   <div class="col-sm-12">
+			   	  <input type="hidden" name="op" value="<%=MaterialesController.OP_GUARDAR%>"> 	
+			      <button type="submit" class="btn btn-primary btn-lg btn-block">Crear</button>
+			  </div>
+		  </div>
+		</c:if>
+		  
+		<c:if test="${material.id > -1}">  
+			  <div class="form-group row">
+			    <div class="col-sm-6">
+			      <input type="hidden" name="op" value="<%=MaterialesController.OP_GUARDAR%>"> 	
+			      <button type="submit" class="btn btn-success btn-lg btn-block">Modificar</button>
+			    </div>
+			    <div class="col-sm-6">			      
+			      <a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_ELIMINAR%>" 
+			       class="btn btn-danger btn-lg btn-block">Eliminar</a>
+			    </div>
+			  </div>
+		</c:if>	  
+	</form>
+</div>
+
 
 
 <jsp:include page="/templates/footer.jsp"></jsp:include>

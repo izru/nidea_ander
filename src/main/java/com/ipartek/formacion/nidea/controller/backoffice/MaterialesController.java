@@ -106,6 +106,7 @@ public class MaterialesController extends HttpServlet {
 	 */
 	private void doProcess(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		alert = null;
 
 		try {
 			// recoger los parametros
@@ -136,7 +137,6 @@ public class MaterialesController extends HttpServlet {
 			request.setAttribute("alert", alert);
 			// request interna a la jsp que queremos ir
 			dispatcher.forward(request, response);
-			op = OP_NINGUNA;
 		}
 
 	}
@@ -149,20 +149,29 @@ public class MaterialesController extends HttpServlet {
 	}
 
 	private void guardar(HttpServletRequest request) {
-		mostrarFormulario(request);
-		dao.guardar(id, nombre, precio);
+		Material material = new Material();
+		if (id == -1) {
+			alert = new Alert("Creado nuevo material ", Alert.TIPO_PRIMARY);
+		} else {
+			alert = new Alert("Modificado material id " + id, Alert.TIPO_PRIMARY);
+			material.setId(id);
+		}
+		// dao.guardar(id, nombre, precio);
+		request.setAttribute("material", material);
+		dispatcher = request.getRequestDispatcher(VIEW_FORM);
 
 	}
 
 	private void eliminar(HttpServletRequest request) {
-		// TODO Auto-generated method stub
+		alert = new Alert("Material eliminado id " + id, Alert.TIPO_PRIMARY);
+		listar(request);
 
 	}
 
 	private void buscar(HttpServletRequest request) {
 		alert = new Alert("Busqueda para: " + search, Alert.TIPO_PRIMARY);
 		ArrayList<Material> materiales = new ArrayList<Material>();
-		materiales = dao.getAll();
+		materiales = dao.getPorNombre(search);
 		request.setAttribute("materiales", materiales);
 		dispatcher = request.getRequestDispatcher(VIEW_INDEX);
 
@@ -170,15 +179,15 @@ public class MaterialesController extends HttpServlet {
 
 	private void mostrarFormulario(HttpServletRequest request) {
 		Material material = new Material();
-		material.setNombre(nombre);
-		material.setPrecio(precio);
-		material.setId(id);
+
 		if (id > -1) {
 			// TODO recuperar de la BBDD que es un material que existe
 			alert = new Alert("Mostramos Detalle id:" + id, Alert.TIPO_WARNING);
+			material = dao.getById(id);
 
 		} else {
 			alert = new Alert("Nuevo Producto", Alert.TIPO_WARNING);
+
 		}
 		request.setAttribute("material", material);
 		dispatcher = request.getRequestDispatcher(VIEW_FORM);
@@ -187,14 +196,21 @@ public class MaterialesController extends HttpServlet {
 	private void recogerParametros(HttpServletRequest request) {
 		if (request.getParameter("op") != null) {
 			op = Integer.parseInt(request.getParameter("op"));
+		} else {
+			op = OP_NINGUNA;
 		}
 		search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
 		if (request.getParameter("id") != null) {
 			id = Integer.parseInt(request.getParameter("id"));
+		} else {
+			id = -1;
 		}
+
 		nombre = (request.getParameter("nombre") != null) ? request.getParameter("nombre") : "";
 		if (request.getParameter("precio") != null) {
 			precio = Float.parseFloat(request.getParameter("precio"));
+		} else {
+			precio = 0;
 		}
 
 	}

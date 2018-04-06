@@ -3,13 +3,22 @@
 <%@include file="/templates/alert.jsp"%>
 <%@page import="com.ipartek.formacion.nidea.controller.backoffice.MaterialesController"%>
 
-Buscador:
-<!-- <form action="materiales-backoffice" method="get"> -->
-<form action="materiales" method="get">
-	<input type="hidden" name="op" value="<%=MaterialesController.OP_BUSQUEDA%>"></input>	
-	<input type="text" name="search" required placeholder="Nombre material"></input>
-	<input type="submit" value="buscar"></input>
-</form> 
+<div class="row">
+
+	<div class="col-md-6">
+		<a class="btn btn-outline-primari" href="backoffice/materiales?op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>">Crear Nuevo</a>
+	</div> 
+	
+	<div class="col-md-6">
+		<form action="backoffice/materiales" method="get">
+			<input type="hidden" name="op" value="<%=MaterialesController.OP_BUSQUEDA%>">
+			<input type="text" name="search" required placeholder="Nombre Material">
+			<input type="submit" value="Buscar" class="btn btn-outline-primari">	
+		</form>
+	</div>	
+
+</div>
+
 
 <!-- Example DataTables Card-->   
         
@@ -74,7 +83,7 @@ Buscador:
       								</c:choose>
       								<tr role="row">      	
       									<td class="sorting_1">  
-      										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>&nombre=${material.nombre}&precio=${material.precio}">
+      										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>">
       									    	${material.nombre} 
       									    	</a>
       									</td>
