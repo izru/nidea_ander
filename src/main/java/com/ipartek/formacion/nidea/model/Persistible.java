@@ -1,5 +1,7 @@
 package com.ipartek.formacion.nidea.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface Persistible<P> {
@@ -27,7 +29,7 @@ public interface Persistible<P> {
 	 * @param pojo
 	 * @return
 	 */
-	public boolean save(P pojo);
+	public boolean save(P pojo) throws SQLException;
 
 	/**
 	 * Eliminamos un registro por su identificador
@@ -36,4 +38,13 @@ public interface Persistible<P> {
 	 * @return
 	 */
 	public boolean delete(int id);
+
+	/**
+	 * Nos mapea un Resultado de la BBDD a un pojo
+	 * 
+	 * @param rs
+	 *            ResultSet 1 registro de la consulta
+	 * @return Pojo con los valores del ResulSet o un null si no hay valores
+	 */
+	public P mapper(ResultSet rs) throws SQLException;
 }

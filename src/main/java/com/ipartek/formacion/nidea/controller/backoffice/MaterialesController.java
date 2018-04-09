@@ -150,22 +150,35 @@ public class MaterialesController extends HttpServlet {
 
 	private void guardar(HttpServletRequest request) {
 		Material material = new Material();
-		if (id == -1) {
-			alert = new Alert("Creado nuevo material ", Alert.TIPO_PRIMARY);
+		material.setId(id);
+		if (nombre != null && nombre != "") {
+			material.setNombre(nombre.trim().substring(0, 44));
+			if (precio > 0) {
+				material.setPrecio(precio);
+				try {
+					boolean salvar = dao.save(material);
+					if (salvar) {
+						alert = new Alert("Material guardado ", Alert.TIPO_PRIMARY);
+					} else {
+						alert = new Alert("Lo sentimos, no hemos podido guardar el material ", Alert.TIPO_DANGER);
+					}
+				} catch (Exception e) {
+
+					alert = new Alert("El material esta duplicado " + e.getCause().toString(), Alert.TIPO_DANGER);
+				}
+			} else {
+				alert = new Alert("El precio debe ser de valor positivo ", Alert.TIPO_DANGER);
+			}
 		} else {
-			alert = new Alert("Modificado material id " + id, Alert.TIPO_PRIMARY);
-			material.setId(id);
+			alert = new Alert("No ha definido el material ", Alert.TIPO_DANGER);
 		}
-		// dao.guardar(id, nombre, precio);
 		request.setAttribute("material", material);
 		dispatcher = request.getRequestDispatcher(VIEW_FORM);
-
 	}
 
 	private void eliminar(HttpServletRequest request) {
 		alert = new Alert("Material eliminado id " + id, Alert.TIPO_PRIMARY);
 		listar(request);
-
 	}
 
 	private void buscar(HttpServletRequest request) {
