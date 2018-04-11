@@ -72,8 +72,8 @@
       									</td>
       									<td> <span class="${clase}"> ${material.precio} &euro;</span></td>  
       									<td>
-      										<a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> 
-      										<a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>  
+      										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>"><i class="fa fa-pencil" aria-hidden="true"></i></a> 
+      										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_ELIMINAR%>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>  
       									</td>   
       								</tr>
      							</c:forEach>

@@ -1,6 +1,7 @@
 package com.ipartek.formacion.nidea.controller.backoffice;
 
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -152,7 +153,17 @@ public class MaterialesController extends HttpServlet {
 		Material material = new Material();
 		material.setId(id);
 		if (nombre != null && nombre != "") {
-			material.setNombre(nombre.trim().substring(0, 44));
+
+			nombre = nombre.trim();
+			if (nombre.length() > 45) {
+				nombre.substring(0, 44);
+			}
+			material.setNombre(nombre);
+			if (request.getParameter("precio") != null) {
+				precio = Float.parseFloat(request.getParameter("precio"));
+			} else {
+				precio = 0;
+			}
 			if (precio > 0) {
 				material.setPrecio(precio);
 				try {
@@ -162,9 +173,10 @@ public class MaterialesController extends HttpServlet {
 					} else {
 						alert = new Alert("Lo sentimos, no hemos podido guardar el material ", Alert.TIPO_DANGER);
 					}
+				} catch (SQLIntegrityConstraintViolationException e) {
+					alert = new Alert("El material esta duplicado ", Alert.TIPO_DANGER);
 				} catch (Exception e) {
-
-					alert = new Alert("El material esta duplicado " + e.getCause().toString(), Alert.TIPO_DANGER);
+					alert = new Alert("Ha habido un problema " + e.getCause().toString(), Alert.TIPO_DANGER);
 				}
 			} else {
 				alert = new Alert("El precio debe ser de valor positivo ", Alert.TIPO_DANGER);
@@ -177,8 +189,13 @@ public class MaterialesController extends HttpServlet {
 	}
 
 	private void eliminar(HttpServletRequest request) {
-		alert = new Alert("Material eliminado id " + id, Alert.TIPO_PRIMARY);
-		listar(request);
+		if (dao.delete(id)) {
+			alert = new Alert("Material eliminado id " + id, Alert.TIPO_PRIMARY);
+			listar(request);
+		} else {
+			alert = new Alert("Lo sentimos, no hemos podido eliminar el material id " + id, Alert.TIPO_DANGER);
+		}
+
 	}
 
 	private void buscar(HttpServletRequest request) {
@@ -220,11 +237,6 @@ public class MaterialesController extends HttpServlet {
 		}
 
 		nombre = (request.getParameter("nombre") != null) ? request.getParameter("nombre") : "";
-		if (request.getParameter("precio") != null) {
-			precio = Float.parseFloat(request.getParameter("precio"));
-		} else {
-			precio = 0;
-		}
 
 	}
 

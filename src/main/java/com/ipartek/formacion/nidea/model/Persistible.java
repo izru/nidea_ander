@@ -2,6 +2,7 @@ package com.ipartek.formacion.nidea.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 public interface Persistible<P> {
@@ -28,8 +29,9 @@ public interface Persistible<P> {
 	 * 
 	 * @param pojo
 	 * @return
+	 * @throws Exception
 	 */
-	public boolean save(P pojo) throws SQLException;
+	public boolean save(P pojo) throws SQLIntegrityConstraintViolationException, Exception;
 
 	/**
 	 * Eliminamos un registro por su identificador
