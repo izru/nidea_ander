@@ -13,6 +13,11 @@
 	// varias sentencias 
 	String nombre = "pepe";
 	String hora = "10:78";
+	
+	//lanza adrede un Null PointerException y nos mostrara la pagina error.jsp
+	//hemos configurado este comportamiento en web.xml con error<error-page>
+	String nulo =null;
+	nulo.length();
 
 %>
 

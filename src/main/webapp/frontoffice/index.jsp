@@ -2,7 +2,12 @@
 <%@include file="/templates/navbar.jsp"%>
 <%@include file="/templates/alert.jsp"%>
 
+<script type="text/javascript">
+setTimeout(function () { location.reload(1); }, 5000);	
+<!--
 
+//-->
+</script>
 <div class="content-wrapper">
     <div class="container-fluid">
       <!-- Breadcrumbs-->
@@ -86,10 +91,11 @@
 
 ${applicationScope.usuarios_conectados}
 
-<c:forEach items="${usuarios_conectados}" var ="usuario">	
-	 								
-	 								Usuario <c:out value = "${usuario}"/><p>
-     							</c:forEach>
+<ul>
+	<c:forEach var="usuario" items="${applicationScope.usuarios_conectados}">
+		<li>${usuario.key} - ${usuario.value}</li>
+	</c:forEach>
+</ul>
 
 
 <jsp:include page="/templates/footer.jsp"></jsp:include>

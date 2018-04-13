@@ -14,6 +14,15 @@
                
         <label for="usuario">Nombre Usuario</label>
       </div>
+      
+      <div class="form-label-group">
+        <input type="text" class="form-control"
+               name="id" 
+               placeholder="Id" 
+               required autofocus>
+               
+        <label for="id">ID</label>
+      </div>
 
       
      
