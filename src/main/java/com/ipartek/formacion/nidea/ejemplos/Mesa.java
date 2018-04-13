@@ -21,4 +21,10 @@ public class Mesa implements Ordenable {
 	public void setNumPatas(int numPatas) {
 		this.numPatas = numPatas;
 	}
+
+	@Override
+	public int getValor() {
+
+		return this.numPatas;
+	}
 }

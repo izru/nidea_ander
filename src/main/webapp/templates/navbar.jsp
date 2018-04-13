@@ -9,7 +9,10 @@
         <a class="p-2 text-dark" href="generar-mesa">Mesa</a> 
         <a class="p-2 text-dark" href="materiales">Materiales</a>        
         <a class="p-2 text-dark" href="calculadora">Calculadora</a>
-      </nav>    
+      </nav>  
+      
+      
+      	<a class="btn btn-outline-primary" href="loginUser">Login User</a>
       
       
       <c:if test="${empty usuario}">

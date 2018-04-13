@@ -21,4 +21,10 @@ public class Perro implements Ordenable {
 		this.numVacunas = numVacunas;
 	}
 
+	@Override
+	public int getValor() {
+
+		return this.numVacunas;
+	}
+
 }

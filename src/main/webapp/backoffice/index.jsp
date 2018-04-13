@@ -43,10 +43,10 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-list"></i>
               </div>
-              <div class="mr-5">11 New Tasks!</div>
+              <div class="mr-5">Usuarios conectados</div>
             </div>
             <a class="card-footer text-white clearfix small z-1" href="#">
-              <span class="float-left">View Details</span>
+              <span class="float-left">Detalle</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
