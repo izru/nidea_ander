@@ -10,6 +10,9 @@ public class Usuario {
 
 	private int id;
 	private String nombre;
+	private String pass;
+	private int idRol;
+	private String nombreRol;
 
 	public Usuario() {
 		super();
@@ -17,10 +20,10 @@ public class Usuario {
 		this.nombre = "";
 	}
 
-	public Usuario(int id2, String nombre2) {
+	public Usuario(int id, String nombre) {
 		this();
-		this.id = id2;
-		this.nombre = nombre2;
+		this.id = id;
+		this.nombre = nombre;
 	}
 
 	public int getId() {
@@ -41,7 +44,33 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nombre=" + nombre + "]";
+		return "Usuario [id=" + id + ", nombre=" + nombre + " idRol=" + idRol + ", nombreRol=" + nombreRol + "]";
+	}
+
+	public void setIdRol(int idRol) {
+		this.idRol = idRol;
+
+	}
+
+	public void setNombreRol(String nombreRol) {
+		this.nombreRol = nombreRol;
+
+	}
+
+	public int getIdRol() {
+		return idRol;
+	}
+
+	public String getNombreRol() {
+		return nombreRol;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
+	public String getPass() {
+		return pass;
 	}
 
 }

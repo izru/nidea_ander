@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ipartek.formacion.nidea.model.MaterialDAO;
+import com.ipartek.formacion.nidea.model.UsuarioDAO;
 import com.ipartek.formacion.nidea.pojo.Alert;
 
 /**
@@ -52,7 +53,9 @@ public class LoginController extends HttpServlet {
 			String usuario = request.getParameter("usuario");
 			String password = request.getParameter("password");
 
-			if (USER.equalsIgnoreCase(usuario) && PASS.equals(password)) {
+			if (comprobarUsuarioConectado(usuario, password)) {
+
+				// if (USER.equalsIgnoreCase(usuario) && PASS.equals(password)) {
 
 				// guardar usuario en sesion
 				HttpSession session = request.getSession();
@@ -86,6 +89,14 @@ public class LoginController extends HttpServlet {
 			request.setAttribute("alert", alert);
 			request.getRequestDispatcher(view).forward(request, response);
 		}
+
+	}
+
+	boolean comprobarUsuarioConectado(String usuario, String password) {
+		boolean resul = false;
+		UsuarioDAO dao = UsuarioDAO.getInstance();
+		dao.existeUsuario(usuario, password);
+		return resul;
 
 	}
 
