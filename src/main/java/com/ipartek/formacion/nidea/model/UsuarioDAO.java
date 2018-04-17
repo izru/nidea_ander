@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
+import com.ipartek.formacion.nidea.pojo.Rol;
 import com.ipartek.formacion.nidea.pojo.Usuario;
 
 public class UsuarioDAO implements Persistible<Usuario> {
@@ -34,7 +35,7 @@ public class UsuarioDAO implements Persistible<Usuario> {
 	@Override
 	public ArrayList<Usuario> getAll() {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
-		String sql = "select `usuario.idusuario`, `usuario.nombre`, `usuario.pass`, `usuario.id_rol`, `rol.nombre` from "
+		String sql = "select `usuario.id`, `usuario.nombre`, `usuario.password`, `usuario.id_rol`, `rol.nombre` from "
 				+ "`usuario` inner join `rol` on `usuario.id_rol` = `rol.idrol` LIMIT 500;";
 
 		try (Connection con = ConnectionManager.getConnection();
@@ -56,8 +57,8 @@ public class UsuarioDAO implements Persistible<Usuario> {
 	@Override
 	public Usuario getById(int id) {
 		Usuario usuario = null;
-		String sql = "select `usuario.idusuario`, `usuario.nombre`, `usuario.pass`,`usuario.id_rol`, `rol.nombre` from "
-				+ "`usuario` inner join `rol` on `usuario.id_rol` = `rol.idrol` WHERE `usuario.idusuario`= ?;";
+		String sql = "select `usuario.id`, `usuario.nombre`, `usuario.password`,`usuario.id_rol`, `rol.nombre` as `nombreRol` from "
+				+ "`usuario` inner join `rol` on `usuario.id_rol` = `rol.idrol` WHERE `usuario.id`= ?;";
 
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(sql);) {
 			pst.setInt(1, id);
@@ -87,23 +88,28 @@ public class UsuarioDAO implements Persistible<Usuario> {
 		Usuario usuario = new Usuario();
 		usuario.setId(rs.getInt("id"));
 		usuario.setNombre(rs.getString("nombre"));
-		usuario.setPass(rs.getString("nombre"));
-		usuario.setIdRol(rs.getInt("idRol"));
-		usuario.setNombreRol(rs.getString("nombreRol"));
+		usuario.setPassword(rs.getString("password"));
+		Rol rol = new Rol();
+		rol.setId(rs.getInt("id_rol"));
+		rol.setNombre(rs.getString("nombreRol"));
+		usuario.setRol(rol);
 
 		return usuario;
 	}
 
 	public Usuario existeUsuario(String nombre, String password) {
 		Usuario usuario = null;
-		String sql = "select u.idusuario, u.nombre, u.pass, u.id_rol, r.nombre from "
-				+ "usuario as u inner join rol as r on u.id_rol = r.idrol " + "WHERE u.nombre= ? AND u.pass= ?;";
+		String sql = "select u.id, u.nombre, u.password, u.id_rol, r.nombre as nombreRol from "
+				+ "usuario as u inner join rol as r on u.id_rol = r.id " + "WHERE u.nombre= ? AND u.password= ?;";
 
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(sql);) {
 			pst.setString(1, nombre);
 			pst.setString(2, password);
 			try (ResultSet rs = pst.executeQuery()) {
-				usuario = mapper(rs);
+				while (rs.next()) {
+					usuario = mapper(rs);
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import com.ipartek.formacion.nidea.model.MaterialDAO;
 import com.ipartek.formacion.nidea.model.UsuarioDAO;
 import com.ipartek.formacion.nidea.pojo.Alert;
+import com.ipartek.formacion.nidea.pojo.Usuario;
 
 /**
  * Servlet implementation class LoginController
@@ -52,8 +53,9 @@ public class LoginController extends HttpServlet {
 
 			String usuario = request.getParameter("usuario");
 			String password = request.getParameter("password");
+			Usuario user = comprobarUsuarioConectado(usuario, password);
 
-			if (comprobarUsuarioConectado(usuario, password)) {
+			if (user.getId() > -1) {
 
 				// if (USER.equalsIgnoreCase(usuario) && PASS.equals(password)) {
 
@@ -72,7 +74,21 @@ public class LoginController extends HttpServlet {
 				MaterialDAO dao = MaterialDAO.getInstance();
 				request.setAttribute("materiales", dao.getAll());
 
-				view = "backoffice/index.jsp";
+				if (user.getRol().getId() == 1) {
+					view = "backoffice/index.jsp";
+				} else {
+
+					// int id = Integer.parseInt(request.getParameter("id"));
+
+					session.setMaxInactiveInterval(5);
+
+					Usuario usuarioUser = user;
+
+					session.setAttribute("uPublic", usuarioUser);
+
+					view = "frontoffice/index.jsp";
+				}
+
 				alert = new Alert("Ongi Etorri", Alert.TIPO_PRIMARY);
 			} else {
 
@@ -92,12 +108,10 @@ public class LoginController extends HttpServlet {
 
 	}
 
-	boolean comprobarUsuarioConectado(String usuario, String password) {
-		boolean resul = false;
+	Usuario comprobarUsuarioConectado(String usuario, String password) {
 		UsuarioDAO dao = UsuarioDAO.getInstance();
-		dao.existeUsuario(usuario, password);
-		return resul;
-
+		Usuario user = dao.existeUsuario(usuario, password);
+		return user;
 	}
 
 }

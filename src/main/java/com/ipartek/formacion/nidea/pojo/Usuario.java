@@ -10,14 +10,14 @@ public class Usuario {
 
 	private int id;
 	private String nombre;
-	private String pass;
-	private int idRol;
-	private String nombreRol;
+	private String password;
+	private Rol rol;
 
 	public Usuario() {
 		super();
 		this.id = -1;
 		this.nombre = "";
+		this.rol = new Rol();
 	}
 
 	public Usuario(int id, String nombre) {
@@ -44,33 +44,23 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nombre=" + nombre + " idRol=" + idRol + ", nombreRol=" + nombreRol + "]";
+		return "Usuario [id=" + id + ", nombre=" + nombre + ", password =" + password + "]";
 	}
 
-	public void setIdRol(int idRol) {
-		this.idRol = idRol;
-
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public void setNombreRol(String nombreRol) {
-		this.nombreRol = nombreRol;
-
+	public String getPassword() {
+		return password;
 	}
 
-	public int getIdRol() {
-		return idRol;
+	public Rol getRol() {
+		return rol;
 	}
 
-	public String getNombreRol() {
-		return nombreRol;
-	}
-
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
-
-	public String getPass() {
-		return pass;
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 
 }
