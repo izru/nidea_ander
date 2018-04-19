@@ -128,7 +128,6 @@ public class UsuarioDAO implements Persistible<Usuario> {
 			e.printStackTrace();
 		}
 		return usuario;
-
 	}
 
 }

@@ -8,6 +8,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import com.ipartek.formacion.nidea.pojo.Material;
+import com.ipartek.formacion.nidea.pojo.Usuario;
 import com.ipartek.formacion.nidea.util.Utilidades;
 
 public class MaterialDAO implements Persistible<Material> {
@@ -40,7 +41,8 @@ public class MaterialDAO implements Persistible<Material> {
 	public ArrayList<Material> getAll() {
 
 		ArrayList<Material> lista = new ArrayList<Material>();
-		String sql = "SELECT id, nombre, precio FROM material LIMIT 500;";
+		String sql = "SELECT m.id, m.nombre, m.precio, u.id as id_usuario, u.nombre as nombre_usuario "
+				+ "FROM material as m, usuario as u LIMIT 500;";
 
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql);
@@ -67,7 +69,8 @@ public class MaterialDAO implements Persistible<Material> {
 	public ArrayList<Material> getPorNombre(String nombre) {
 
 		ArrayList<Material> lista = new ArrayList<Material>();
-		String sql = "select id, nombre, precio from material \n" + "where nombre like ? order by id desc limit 500 ;";
+		String sql = "select m.id, m.nombre, m.precio, u.id as id_usuario, u.nombre as nombre_usuario "
+				+ "from material as m, usuario as u \n" + "where m.nombre like ? order by m.id desc limit 500 ;";
 
 		ResultSet rs = null;
 
@@ -92,7 +95,8 @@ public class MaterialDAO implements Persistible<Material> {
 	@Override
 	public Material getById(int id) {
 		Material material = null;
-		String sql = "SELECT `id`, `nombre`, `precio` FROM `material` WHERE `id`= ?;";
+		String sql = "SELECT `m`.`id`, `m`.`nombre`, `m`.`precio`, `u`.`id` as `id_usuario`, `u`.`nombre` as `nombre_usuario` FROM `material` as `m`, `usuario` as `u`  "
+				+ "WHERE `u`.`id_usuario`=`u`.`id` AND `m`.`id`= ?;";
 
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(sql);) {
 			pst.setInt(1, id);
@@ -191,6 +195,12 @@ public class MaterialDAO implements Persistible<Material> {
 		material.setId(rs.getInt("id"));
 		material.setNombre(rs.getString("nombre"));
 		material.setPrecio(rs.getFloat("precio"));
+
+		Usuario usuario = new Usuario();
+		usuario.setId(rs.getInt("id_usuario"));
+		usuario.setNombre(rs.getString("nombre_usuario"));
+
+		material.setUsuario(usuario);
 
 		return material;
 	}

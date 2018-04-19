@@ -41,6 +41,7 @@
                 				<tr role="row">
                 					<th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Nombre: activate to sort column descending" style="width: 55px;">Nombre</th>
                 					<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Precio: activate to sort column ascending" style="width: 64px;">Precio</th>
+                					<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Usuario: activate to sort column ascending" style="width: 64px;">Usuario</th>
                 					<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 48px;"></th>                	
                 				</tr>
               				</thead>
@@ -48,6 +49,7 @@
                 				<tr>
                 					<th rowspan="1" colspan="1">Nombre</th>
                 					<th rowspan="1" colspan="1">Precio</th>
+                					<th rowspan="1" colspan="1">Usuario</th>
                 					<th rowspan="1" colspan="1"></th> 
                 				</tr>               
               				</tfoot>
@@ -70,7 +72,8 @@
       									    	${material.nombre} 
       									    	</a>
       									</td>
-      									<td> <span class="${clase}"> ${material.precio} &euro;</span></td>  
+      									<td> <span class="${clase}"> ${material.precio} &euro;</span></td> 
+      									<td>  ${material.usuario.nombre} </td> 
       									<td>
       										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_MOSTRAR_FORMULARIO%>"><i class="fa fa-pencil" aria-hidden="true"></i></a> 
       										<a href="backoffice/materiales?id=${material.id}&op=<%=MaterialesController.OP_ELIMINAR%>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>  

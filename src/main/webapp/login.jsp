@@ -10,6 +10,7 @@
         <input type="text" class="form-control"
                name="usuario" 
                placeholder="Nombre Usuario" 
+               value="administrador"
                required autofocus>
                
         <label for="usuario">Nombre Usuario</label>
@@ -19,6 +20,7 @@
         <input type="password" 
                name="password" 
                class="form-control" 
+               value="123456"
                placeholder="Contraseña" required>
                
         <label for="password">Contraseña</label>
