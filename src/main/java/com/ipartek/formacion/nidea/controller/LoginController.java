@@ -25,11 +25,29 @@ public class LoginController extends HttpServlet {
 	private String view = "";
 	private Alert alert = new Alert();
 
+	private UsuarioDAO daoUsuario;
+
 	private static final String USER = "admin";
 	private static final String PASS = "admin";
 
+	private static final String VIEW_LOGIN = "login.jsp";
+	private static final String VIEW_BACKOFFICE = "backoffice/index.jsp";
+	private static final String VIEW_FRONTOFFICE = "frontoffice/index.jsp";
+
 	// private static final int SESSION_EXPIRATION = 60 * 1;// 1 min
 	private static final int SESSION_EXPIRATION = -1; // No expira
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		daoUsuario = UsuarioDAO.getInstance();
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		daoUsuario = null;
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -37,9 +55,7 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		request.getRequestDispatcher("login.jsp").forward(request, response);
-
+		request.getRequestDispatcher(VIEW_LOGIN).forward(request, response);
 	}
 
 	/**
@@ -55,13 +71,13 @@ public class LoginController extends HttpServlet {
 			String password = request.getParameter("password");
 			Usuario user = comprobarUsuarioConectado(usuario, password);
 
-			if (user.getId() > -1) {
+			if (user != null) {
 
 				// if (USER.equalsIgnoreCase(usuario) && PASS.equals(password)) {
 
 				// guardar usuario en sesion
 				HttpSession session = request.getSession();
-				session.setAttribute("usuario", usuario);
+				session.setAttribute("user", user);
 
 				/**
 				 * tiempo de expiracion de sesion, tambien se puede configurar web.xml un valor
@@ -74,31 +90,22 @@ public class LoginController extends HttpServlet {
 				MaterialDAO dao = MaterialDAO.getInstance();
 				request.setAttribute("materiales", dao.getAll());
 
-				if (user.getRol().getId() == 1) {
-					view = "backoffice/index.jsp";
+				if (user.getRol().getId() == Usuario.USER_ROL_ADMINISTRADOR) {
+					view = VIEW_BACKOFFICE;
 				} else {
-
-					// int id = Integer.parseInt(request.getParameter("id"));
-
-					session.setMaxInactiveInterval(5);
-
-					Usuario usuarioUser = user;
-
-					session.setAttribute("uPublic", usuarioUser);
-
-					view = "frontoffice/index.jsp";
+					view = VIEW_FRONTOFFICE;
 				}
 
 				alert = new Alert("Ongi Etorri", Alert.TIPO_PRIMARY);
 			} else {
 
-				view = "login.jsp";
+				view = VIEW_LOGIN;
 				alert = new Alert("Credenciales incorrectas, prueba de nuevo");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			view = "login.jsp";
+			view = VIEW_LOGIN;
 			alert = new Alert();
 
 		} finally {
@@ -109,8 +116,7 @@ public class LoginController extends HttpServlet {
 	}
 
 	Usuario comprobarUsuarioConectado(String usuario, String password) {
-		UsuarioDAO dao = UsuarioDAO.getInstance();
-		Usuario user = dao.existeUsuario(usuario, password);
+		Usuario user = daoUsuario.existeUsuario(usuario, password);
 		return user;
 	}
 

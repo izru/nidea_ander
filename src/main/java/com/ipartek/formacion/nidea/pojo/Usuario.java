@@ -13,6 +13,9 @@ public class Usuario {
 	private String password;
 	private Rol rol;
 
+	public static final int USER_ROL_ADMINISTRADOR = 1;
+	public static final int USER_ROL_USUARIO = 2;
+
 	public Usuario() {
 		super();
 		this.id = -1;

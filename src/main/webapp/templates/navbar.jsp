@@ -12,7 +12,7 @@
       </nav>  
       
       
-      	<a class="btn btn-outline-primary" href="loginUser">Login User ${usuario}</a>
+      <!--  	<a class="btn btn-outline-primary" href="loginUser">Login User ${usuario}</a> -->
       
        <c:if test="${empty usuario}">     
       	<a class="btn btn-outline-primary" href="login">Login</a>

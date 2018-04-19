@@ -35,7 +35,7 @@ public class UsuarioDAO implements Persistible<Usuario> {
 	@Override
 	public ArrayList<Usuario> getAll() {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
-		String sql = "select `usuario.id`, `usuario.nombre`, `usuario.password`, `usuario.id_rol`, `rol.nombre` from "
+		String sql = "select `usuario.id`, `usuario.nombre`, `usuario.password`, `usuario.id_rol`, `rol.nombre` as `nombreRol` from "
 				+ "`usuario` inner join `rol` on `usuario.id_rol` = `rol.idrol` LIMIT 500;";
 
 		try (Connection con = ConnectionManager.getConnection();
@@ -63,7 +63,9 @@ public class UsuarioDAO implements Persistible<Usuario> {
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(sql);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery()) {
-				usuario = mapper(rs);
+				while (rs.next()) {
+					usuario = mapper(rs);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,17 +91,28 @@ public class UsuarioDAO implements Persistible<Usuario> {
 		usuario.setId(rs.getInt("id"));
 		usuario.setNombre(rs.getString("nombre"));
 		usuario.setPassword(rs.getString("password"));
+
+		// rol del usuario
 		Rol rol = new Rol();
 		rol.setId(rs.getInt("id_rol"));
-		rol.setNombre(rs.getString("nombreRol"));
+		rol.setNombre(rs.getString("nombre_rol"));
 		usuario.setRol(rol);
 
 		return usuario;
 	}
 
+	/**
+	 * Buscamos un usuario por nombre y password
+	 * 
+	 * @param nombre
+	 *            String que corresponde al nombre de usuario
+	 * @param password
+	 *            String que corresponde al password
+	 * @return Usuario si existe, null si no lo encuentra
+	 */
 	public Usuario existeUsuario(String nombre, String password) {
 		Usuario usuario = null;
-		String sql = "select u.id, u.nombre, u.password, u.id_rol, r.nombre as nombreRol from "
+		String sql = "select u.id, u.nombre, u.password, u.id_rol, r.nombre as nombre_rol from "
 				+ "usuario as u inner join rol as r on u.id_rol = r.id " + "WHERE u.nombre= ? AND u.password= ?;";
 
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(sql);) {
